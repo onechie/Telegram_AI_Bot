@@ -16,7 +16,12 @@ const sendMessage = (messageObj, messageText) => {
 };
 
 export const handleMessage = async (messageObj) => {
-  const messageText = messageObj.text || "";
+  if (!messageObj) {
+    console.error("Received an undefined message object");
+    return; // Early exit if messageObj is undefined
+  }
+
+  const messageText = messageObj.text || (messageObj.edited_message && messageObj.edited_message.text) || "";
 
   if (messageText.charAt(0) === "/") {
     const command = messageText.substr(1);
@@ -27,11 +32,11 @@ export const handleMessage = async (messageObj) => {
           "Hi! I'm a bot. I can help you to get started"
         );
       default:
-        return sendMessage(messageObj, "Hey hi, i don't know that command");
+        return sendMessage(messageObj, "Hey hi, I don't know that command");
     }
   } else {
     const result = await model.generateContent(messageText);
-    const text = result || "Sorry, I can't answer that!";
+    const text = result.response.text() || "Sorry, I can't answer that!";
     return sendMessage(messageObj, text);
   }
 };
