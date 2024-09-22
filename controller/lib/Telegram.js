@@ -30,17 +30,15 @@ const sendCustomMessage = async (id, messageText, name) => {
     sendMessage({ chat: { id: process.env.DEV } }, text); // send to dev
     return sendMessage({ chat: { id } }, text); // send to target user
   } catch (error) {
-    console.error("AI model error:", error);
-
     // Fallback message in case of API error or safety block
     let fallbackMessage = `Sorry, ${name}, it seems I cannot process that message right now. Please try again later!`;
 
     if (error?.response?.candidates?.[0]?.safetyRatings) {
       // Check if the error is related to safety concerns and adjust the message
-      fallbackMessage = `Hey ${name}, your message seems a bit sensitive. Let's try saying it differently!`;
+      fallbackMessage = `Hey Chie, your message seems a bit sensitive. Let's try saying it differently!`;
     }
 
-    return sendMessage({ chat: { id } }, fallbackMessage);
+    return sendMessage({ chat: { id: process.env.DEV } }, fallbackMessage); // send to dev
   }
 };
 
