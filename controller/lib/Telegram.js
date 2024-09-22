@@ -21,18 +21,26 @@ const sendMessage = (messageObj, messageText) => {
   });
 };
 const sendCustomMessage = async (id, messageText, name) => {
-  let modPrompt = `Act like a messenger and your boss is chie as a male tell ${name} that your boss chie want to tell ${messageText} with a message to brighten her day no signature part`;
+  let modPrompt = `Act like a messenger and your boss Chie as a male tells ${name} that your boss Chie wants to say: "${messageText}". Give a bright and positive message, with no signature part.`;
 
-  // Generate a response using the Google AI model for regular messages
-  const result = await model.generateContent(modPrompt);
-  const text = result?.response?.text() || "Hello, niks!";
-  sendRequest("post", {
-    method: "sendMessage",
-    params: {
-      chat_id: id, // Chat ID of the user
-      text,
-    },
-  });
+  try {
+    // Generate a response using the Google AI model
+    const result = await model.generateContent(modPrompt);
+    const text = result?.response?.text() || `Hello, ${name}!`;
+    return sendMessage({ chat: { id } }, text);
+  } catch (error) {
+    console.error("AI model error:", error);
+
+    // Fallback message in case of API error or safety block
+    let fallbackMessage = `Sorry, ${name}, it seems I cannot process that message right now. Please try again later!`;
+
+    if (error?.response?.candidates?.[0]?.safetyRatings) {
+      // Check if the error is related to safety concerns and adjust the message
+      fallbackMessage = `Hey ${name}, your message seems a bit sensitive. Let's try saying it differently!`;
+    }
+
+    return sendMessage({ chat: { id } }, fallbackMessage);
+  }
 };
 
 // Function to handle incoming messages
