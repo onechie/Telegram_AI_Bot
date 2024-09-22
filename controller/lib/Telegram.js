@@ -47,15 +47,18 @@ export const handleMessage = async (messageObj) => {
 
   // Check if the message is a command (starts with "/")
   if (messageText.startsWith("/")) {
-    const command = messageText.slice(1); // Extract the command without "/"
+    const [commandParts, ...messageParts] = messageText.split(" ");
+    const command = commandParts.slice(1); // Get the command without "/"
+    const message = messageParts.join(" "); // Combine the remaining words
+
     switch (command) {
       case "start":
         return sendMessage(
           messageObj,
           "Hi! I'm a bot. I can help you to get started"
         );
-      case "niks": //5711448416
-        return sendCustomMessage("7368334563", command.slice(5), "niks");
+      case "niks":
+        return sendCustomMessage(process.env.MY_ONE, message, "niks");
 
       default:
         return sendMessage(messageObj, "Hey hi, I don't know that command");
