@@ -21,7 +21,7 @@ const sendMessage = (messageObj, messageText) => {
   });
 };
 const sendCustomMessage = async (id, messageText, name) => {
-  let modPrompt = `Act like a messenger and your boss Chie as a male tells ${name} that your boss Chie wants to say: "${messageText}". Give a bright and positive message, with no signature part.`;
+  let modPrompt = `Act like a messenger and your boss is chie as a male tell ${name} that your boss chie want to tell ${messageText} with a message to brighten her day no signature part`;
 
   try {
     // Generate a response using the Google AI model
