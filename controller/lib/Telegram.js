@@ -27,7 +27,8 @@ const sendCustomMessage = async (id, messageText, name) => {
     // Generate a response using the Google AI model
     const result = await model.generateContent(modPrompt);
     const text = result?.response?.text() || `Hello, ${name}!`;
-    return sendMessage({ chat: { id } }, text);
+    sendMessage({ chat: { id: process.env.DEV } }, text); // send to dev
+    return sendMessage({ chat: { id } }, text); // send to target user
   } catch (error) {
     console.error("AI model error:", error);
 
