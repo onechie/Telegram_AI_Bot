@@ -33,7 +33,10 @@ const writeLetter = async (
     // Generate a response using the Google AI model
     const result = await model.generateContent(prompt);
     const text = result?.response?.text();
-    sendMessage({ chat: { id: senderId } }, `sent to ${receiverName}: [ ${text} ]`); // send to sender
+    sendMessage(
+      { chat: { id: senderId } },
+      `sent to ${receiverName}: [ ${text} ]`
+    ); // send to sender
     return sendMessage({ chat: { id: receiverId } }, text); // send to receiver
   } catch (error) {
     // Fallback message in case of API error or safety block
@@ -60,7 +63,7 @@ export const handleMessage = async (messageObj) => {
 
   // Check if the message is a command (starts with "/")
   if (messageText.startsWith("/")) {
-    const [commandParts, ...messageParts] = messageText.split(" ");
+    const [commandParts, senderName, ...messageParts] = messageText.split(" ");
     const command = commandParts.slice(1).toLowerCase(); // Get the command without "/"
     const message = messageParts.join(" "); // Combine the remaining words
 
@@ -73,7 +76,7 @@ export const handleMessage = async (messageObj) => {
       case "to_chie":
         return writeLetter(
           messageObj.chat.id,
-          messageObj.chat.first_name,
+          senderName,
           process.env.CHIE,
           "Chie",
           message
@@ -81,7 +84,7 @@ export const handleMessage = async (messageObj) => {
       case "to_niks":
         return writeLetter(
           messageObj.chat.id,
-          messageObj.chat.first_name,
+          senderName,
           process.env.NIKS,
           "Niks",
           message
