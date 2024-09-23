@@ -37,7 +37,7 @@ const writeLetter = async (
       { chat: { id: senderId } },
       `Letter successfully sent to ${receiverName}:  "${text}"`
     ); // send to sender
-    return sendMessage({ chat: { receiverId } }, text); // send to receiver
+    return sendMessage({ chat: { id: receiverId } }, text); // send to receiver
   } catch (error) {
     // Fallback message in case of API error or safety block
     let fallbackMessage = `Sorry, ${senderName}, it seems I cannot process that message right now. Please try again later!`;
