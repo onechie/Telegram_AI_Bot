@@ -33,10 +33,7 @@ const writeLetter = async (
     // Generate a response using the Google AI model
     const result = await model.generateContent(prompt);
     const text = result?.response?.text();
-    sendMessage(
-      { chat: { id: senderId } },
-      `sent to ${receiverName}: ${text}`
-    ); // send to sender
+    sendMessage({ chat: { id: senderId } }, `sent to ${receiverName}: [ ${text} ]`); // send to sender
     return sendMessage({ chat: { id: receiverId } }, text); // send to receiver
   } catch (error) {
     // Fallback message in case of API error or safety block
@@ -73,19 +70,19 @@ export const handleMessage = async (messageObj) => {
           messageObj,
           "Hi! I'm a bot. I can help you to get started"
         );
-      case "niks":
+      case "to_chie":
         return writeLetter(
-          process.env.MY_ONE,
-          "Niks",
-          process.env.DEV,
+          messageObj.chat.id,
+          messageObj.chat.first_name,
+          process.env.CHIE,
           "Chie",
           message
         );
-      case "chie":
+      case "to_niks":
         return writeLetter(
-          process.env.DEV,
-          "Chie",
-          process.env.MY_ONE,
+          messageObj.chat.id,
+          messageObj.chat.first_name,
+          process.env.NIKS,
           "Niks",
           message
         );
