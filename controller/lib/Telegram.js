@@ -28,7 +28,7 @@ const writeLetter = async (
   receiverName,
   message
 ) => {
-  const prompt = `Act like a messenger and your boss ${senderName} as a male tells ${receiverName} that your boss ${senderName} wants to say: "${message}". Give a bright and positive message, with no signature part.`;
+  const prompt = `Act like a messenger and tell ${receiverName} that ${senderName} wants to say about "${message}". Give a bright and positive message.`;
   try {
     // Generate a response using the Google AI model
     const result = await model.generateContent(prompt);
