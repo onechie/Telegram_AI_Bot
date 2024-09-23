@@ -22,13 +22,14 @@ const sendMessage = (messageObj, messageText) => {
 };
 
 const writeLetter = async (
+  gender,
   senderId,
   senderName,
   receiverId,
   receiverName,
   message
 ) => {
-  const prompt = `Act like a messenger and tell ${receiverName} that ${senderName} wants to say about "${message}". Give a bright and positive message.`;
+  const prompt = `Act like a messenger as a ${gender} and tell ${receiverName} that ${senderName} wants to say about "${message}". Give a bright and positive message.`;
   try {
     // Generate a response using the Google AI model
     const result = await model.generateContent(prompt);
@@ -75,6 +76,7 @@ export const handleMessage = async (messageObj) => {
         );
       case "to_chie":
         return writeLetter(
+          "female",
           messageObj.chat.id,
           senderName,
           process.env.CHIE,
@@ -83,6 +85,7 @@ export const handleMessage = async (messageObj) => {
         );
       case "to_niks":
         return writeLetter(
+          "male",
           messageObj.chat.id,
           senderName,
           process.env.NIKS,
