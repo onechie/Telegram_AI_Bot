@@ -22,3 +22,7 @@ app.get("*", (req, res) => {
 app.listen(PORT, () => {
   console.log("Server is running on PORT:", PORT); // Log the server status
 });
+
+// TODO: Add database
+// TODO: Add commands set nickname, gender
+// TODO: enhance the write letter prompt

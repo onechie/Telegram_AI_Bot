@@ -29,14 +29,15 @@ const writeLetter = async (
   receiverName,
   message
 ) => {
-  const prompt = `Act like a messenger as a ${gender} and tell ${receiverName} that ${senderName} wants to say about "${message}". Give a bright and positive message.`;
+  const prompt = `Imagine yourself as a warm-hearted, friendly messenger of ${gender}. Deliver an uplifting message to ${receiverName} on behalf of ${senderName}. The message to convey is: "${message}". Make sure the tone is bright, positive, and filled with encouragement, leaving the recipient feeling joyful and appreciated.`;
+
   try {
     // Generate a response using the Google AI model
     const result = await model.generateContent(prompt);
     const text = result?.response?.text();
     sendMessage(
       { chat: { id: senderId } },
-      `sent to ${receiverName}: [ ${text} ]`
+      `${text} : [sent to ${receiverName}]`
     ); // send to sender
     return sendMessage({ chat: { id: receiverId } }, text); // send to receiver
   } catch (error) {
