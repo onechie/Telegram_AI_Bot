@@ -20,25 +20,34 @@ const sendMessage = (messageObj, messageText) => {
     },
   });
 };
-const sendCustomMessage = async (id, messageText, name) => {
-  let modPrompt = `Act like a messenger and your boss Chie as a male tells ${name} that your boss Chie wants to say: "${messageText}". Give a bright and positive message, with no signature part.`;
 
+const writeLetter = async (
+  senderId,
+  senderName,
+  receiverId,
+  receiverName,
+  message
+) => {
+  const prompt = `Act like a messenger and your boss ${senderName} as a male tells ${receiverName} that your boss ${senderName} wants to say: "${message}". Give a bright and positive message, with no signature part.`;
   try {
     // Generate a response using the Google AI model
-    const result = await model.generateContent(modPrompt);
-    const text = result?.response?.text() || `Hello, ${name}!`;
-    sendMessage({ chat: { id: process.env.DEV } }, text); // send to dev
-    return sendMessage({ chat: { id } }, text); // send to target user
+    const result = await model.generateContent(prompt);
+    const text = result?.response?.text();
+    sendMessage(
+      { chat: { id: senderId } },
+      `Letter successfully sent to ${receiverName}:  "${text}"`
+    ); // send to sender
+    return sendMessage({ chat: { receiverId } }, text); // send to receiver
   } catch (error) {
     // Fallback message in case of API error or safety block
-    let fallbackMessage = `Sorry, ${name}, it seems I cannot process that message right now. Please try again later!`;
+    let fallbackMessage = `Sorry, ${senderName}, it seems I cannot process that message right now. Please try again later!`;
 
     if (error?.response?.candidates?.[0]?.safetyRatings) {
       // Check if the error is related to safety concerns and adjust the message
-      fallbackMessage = `Hey Chie, your message seems a bit sensitive. Let's try saying it differently!`;
+      fallbackMessage = `Hey ${senderName}, your message seems a bit sensitive. Let's try saying it differently!`;
     }
 
-    return sendMessage({ chat: { id: process.env.DEV } }, fallbackMessage); // send to dev
+    return sendMessage({ chat: { id: senderId } }, fallbackMessage); // send to sender
   }
 };
 
@@ -55,7 +64,7 @@ export const handleMessage = async (messageObj) => {
   // Check if the message is a command (starts with "/")
   if (messageText.startsWith("/")) {
     const [commandParts, ...messageParts] = messageText.split(" ");
-    const command = commandParts.slice(1); // Get the command without "/"
+    const command = commandParts.slice(1).toLowerCase(); // Get the command without "/"
     const message = messageParts.join(" "); // Combine the remaining words
 
     switch (command) {
@@ -65,7 +74,21 @@ export const handleMessage = async (messageObj) => {
           "Hi! I'm a bot. I can help you to get started"
         );
       case "niks":
-        return sendCustomMessage(process.env.MY_ONE, message, "niks");
+        return writeLetter(
+          process.env.MY_ONE,
+          "NIKS",
+          process.env.DEV,
+          "CHIE",
+          message
+        );
+      case "chie":
+        return writeLetter(
+          process.env.DEV,
+          "CHIE",
+          process.env.MY_ONE,
+          "NIKS",
+          message
+        );
 
       default:
         return sendMessage(messageObj, "Hey hi, I don't know that command");
