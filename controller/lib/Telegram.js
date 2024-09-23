@@ -35,7 +35,7 @@ const writeLetter = async (
     const text = result?.response?.text();
     sendMessage(
       { chat: { id: senderId } },
-      `Letter successfully sent to ${receiverName}:  "${text}"`
+      `Letter successfully sent to ${receiverName}:%0A"${text}"`
     ); // send to sender
     return sendMessage({ chat: { id: receiverId } }, text); // send to receiver
   } catch (error) {
@@ -76,17 +76,17 @@ export const handleMessage = async (messageObj) => {
       case "niks":
         return writeLetter(
           process.env.MY_ONE,
-          "NIKS",
+          "Niks",
           process.env.DEV,
-          "CHIE",
+          "Chie",
           message
         );
       case "chie":
         return writeLetter(
           process.env.DEV,
-          "CHIE",
+          "Chie",
           process.env.MY_ONE,
-          "NIKS",
+          "Niks",
           message
         );
 
