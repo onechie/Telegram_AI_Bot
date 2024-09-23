@@ -35,7 +35,7 @@ const writeLetter = async (
     const text = result?.response?.text();
     sendMessage(
       { chat: { id: senderId } },
-      `Letter successfully sent to ${receiverName}:%0A"${text}"`
+      `sent to ${receiverName}: ${text}`
     ); // send to sender
     return sendMessage({ chat: { id: receiverId } }, text); // send to receiver
   } catch (error) {
