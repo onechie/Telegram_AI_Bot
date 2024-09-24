@@ -13,12 +13,11 @@ export const AI_SendToCommand = async (chat_id, receiver_id, message) => {
     const sender = await getUser(chat_id);
     const receiver = await getUser(receiver_id);
     if (sender && receiver) {
-      const prompt = `Imagine yourself as a warm-hearted, friendly ${
-        sender.gender ? sender.gender : "messenger"
-      }. Deliver an uplifting message ${
-        receiver.name ? `to ${receiver.name}` : ""
-      } on behalf of ${
+      const prompt = `Imagine yourself as a warm-hearted, friendly messenger. Deliver an uplifting message 
+      ${receiver.name ? `to ${receiver.name}` : ""} on behalf of ${
         sender.name ? sender.name : "someone"
+      }${
+        sender.gender ? "as a" + sender.gender : ""
       }. The message to convey is: "${message}". Make sure the tone is bright, positive, and filled with encouragement, leaving the recipient feeling joyful and appreciated. Avoid including any signature part.`;
 
       // Generate a response using the Google AI model
