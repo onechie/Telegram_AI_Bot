@@ -17,7 +17,7 @@ export const AI_SendToCommand = async (chat_id, receiver_id, message) => {
       ${receiver.name ? `to ${receiver.name}` : ""} on behalf of ${
         sender.name ? sender.name : "someone"
       }${
-        sender.gender ? " a " + sender.gender  + " person": ""
+        sender.gender ? " a " + sender.gender + " person" : ""
       }. The message to convey is: "${message}". Make sure the tone is bright, positive, and filled with encouragement, leaving the recipient feeling joyful and appreciated. Avoid including any signature part.`;
 
       // Generate a response using the Google AI model
@@ -49,8 +49,11 @@ export const AI_SendToCommand = async (chat_id, receiver_id, message) => {
 
 export const AI_TalkCommand = async (chat_id, prompt) => {
   try {
+    const sender = await getUser(chat_id);
     // Handle regular messages by generating a response using the Google AI model
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent(
+      `${sender.name ? `Hello, I am ${sender.name}, ` : ""}${prompt}`
+    );
     const responseText = result?.response?.text();
     return sendMessage(chat_id, responseText);
   } catch (error) {
