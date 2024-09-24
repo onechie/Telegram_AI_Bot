@@ -4,7 +4,7 @@ import {
   setGenderCommand,
   getMeCommand,
 } from "../commands/user.command.js";
-import { AI_TalkCommand, AI_SendToCommand } from "../commands/ai.command.js";
+import { AI_TalkCommand, AI_SendToCommand, AI_ChavacanoCommand } from "../commands/ai.command.js";
 import { sendMessage } from "../commands/general.command.js";
 import { errorMessages } from "../utils/error_messages.js";
 
