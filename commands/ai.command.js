@@ -17,7 +17,7 @@ export const AI_SendToCommand = async (chat_id, receiver_id, message) => {
       ${receiver.name ? `to ${receiver.name}` : ""} on behalf of ${
         sender.name ? sender.name : "someone"
       }${
-        sender.gender ? "as a" + sender.gender : ""
+        sender.gender ? " a " + sender.gender  + " person": ""
       }. The message to convey is: "${message}". Make sure the tone is bright, positive, and filled with encouragement, leaving the recipient feeling joyful and appreciated. Avoid including any signature part.`;
 
       // Generate a response using the Google AI model
