@@ -2,7 +2,7 @@ import User from "../models/user.model.js";
 import { sendRequest } from "../config/axios.js"; // Import the request function
 
 const errorMessages = {
-  101: errorMessages[101],
+  101: `Oops! 😔 Something went wrong. Please try again or check your input and give it another shot. If the issue persists, feel free to reach out for help!`,
 };
 
 // Function to send a message back to the user
@@ -82,7 +82,6 @@ export const setName = async (chat_id, newName) => {
 
 // Function to set gender
 export const setGender = async (chat_id, newGender) => {
-
   try {
     const result = await User.findOneAndUpdate(
       { chat_id },
