@@ -71,7 +71,7 @@ export const startCommand = async (chat_id) => {
 // Get info command
 export const getMeCommand = async (chat_id) => {
   try {
-    const user = getUser(chat_id);
+    const user = await getUser(chat_id);
     if (user) {
       return sendMessage(
         chat_id,
