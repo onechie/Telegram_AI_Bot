@@ -5,7 +5,9 @@ import {
   writeLetter,
   createUser,
   setName,
+  setGender,
 } from "../commands/user.command.js";
+import { updateName } from "../controller/user.controller.js";
 // Load environment variables
 dotenv.config();
 
@@ -16,54 +18,80 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 // Function to handle incoming messages
 export const handleMessage = async (req) => {
-  const messageObj = req.body?.message;
-  if (!messageObj) {
-    console.error("Received an undefined message object");
-    return; // Exit if the message object is not valid
-  }
+  try {
+    const messageObj = req.body?.message;
 
-  // Get the text from the message or edited message
-  const messageText = messageObj.text || messageObj.edited_message?.text || "";
-
-  // Check if the message is a command (starts with "/")
-  if (messageText.startsWith("/")) {
-    const [commandParts, secondPart, ...messageParts] = messageText.split(" ");
-    const command = commandParts.slice(1).toLowerCase(); // Get the command without "/"
-    const message = messageParts.join(" "); // Combine the remaining words
-
-    switch (command) {
-      case "start":
-        return createUser(messageObj.chat.id);
-      case "set_name":
-        return createUser(messageObj.chat.id, secondPart);
-      case "set_gender":
-        return createUser(messageObj.chat.id, secondPart);
-      // case "to_chie":
-      //   return writeLetter(
-      //     "female",
-      //     messageObj.chat.id,
-      //     senderName,
-      //     process.env.CHIE,
-      //     "Chie",
-      //     message
-      //   );
-      // case "to_niks":
-      //   return writeLetter(
-      //     "male",
-      //     messageObj.chat.id,
-      //     senderName,
-      //     process.env.NIKS,
-      //     "Niks",
-      //     message
-      //   );
-
-      default:
-        return sendMessage(messageObj, "Hey hi, I don't know that command");
+    // Check if messageObj or messageText exists
+    if (!messageObj || !messageObj.chat || !messageObj.chat.id) {
+      console.error("Received an invalid or undefined message object");
+      return; // Exit if the message object is invalid
     }
-  } else {
-    // Generate a response using the Google AI model for regular messages
-    const result = await model.generateContent(messageText);
-    const text = result?.response?.text() || "Sorry, I can't answer that!";
-    return sendMessage(messageObj, text); // Send the generated response
+
+    const chatId = messageObj.chat.id;
+    const messageText =
+      messageObj.text?.trim() || messageObj.edited_message?.text?.trim() || "";
+
+    // Early exit if the messageText is empty
+    if (!messageText) {
+      return sendMessage(
+        chatId,
+        "It seems like your message was empty! Please type something."
+      );
+    }
+
+    // Check if the message is a command (starts with "/")
+    if (messageText.startsWith("/")) {
+      // Extract the command and arguments using regular expression
+      const commandPattern = /^\/(\w+)(?:\s+(.+))?/;
+      const matches = messageText.match(commandPattern);
+
+      if (!matches || matches.length < 2) {
+        return sendMessage(
+          chatId,
+          "Invalid command format. Please use the correct format."
+        );
+      }
+
+      const command = matches[1].toLowerCase(); // Extract command without "/"
+      const params = matches[2]?.trim() || ""; // Extract parameters if they exist
+
+      // Split parameters into array for multi-argument commands
+      const args = params.split(/\s+/).filter(Boolean);
+
+      switch (command) {
+        case "start":
+          return await createUser(chatId);
+
+        case "set_name":
+          return await updateName(chatId, args.join(" ")); // Allow multi-word names
+
+        case "set_gender":
+          return await setGender(chatId, args[0].toLowerCase()); // Gender likely to be a single word
+
+        // Add additional custom commands here
+        // case "to_chie":
+        //   return await writeLetter("female", chatId, senderName, process.env.CHIE, "Chie", args.join(" "));
+        // case "to_niks":
+        //   return await writeLetter("male", chatId, senderName, process.env.NIKS, "Niks", args.join(" "));
+
+        default:
+          return sendMessage(
+            chatId,
+            `Unknown command "${command}". Try using /start, /set_name, or /set_gender.`
+          );
+      }
+    } else {
+      // Handle regular messages by generating a response using the Google AI model
+      const result = await model.generateContent(messageText);
+      const responseText =
+        result?.response?.text() || "Sorry, I couldn't understand that!";
+      return sendMessage(chatId, responseText);
+    }
+  } catch (error) {
+    console.error("Error handling message:", error.message);
+    return sendMessage(
+      req.body?.message?.chat?.id,
+      "Oops! Something went wrong. Please try again."
+    );
   }
 };

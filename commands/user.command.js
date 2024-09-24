@@ -1,4 +1,8 @@
-import User from "../models/user.model.js";
+import {
+  createUser,
+  setName,
+  setGender,
+} from "../controllers/userController.js";
 import { sendRequest } from "../config/axios.js"; // Import the request function
 
 const errorMessages = {
@@ -44,69 +48,74 @@ export const writeLetter = async (
     return sendMessage(senderId, fallbackMessage); // send to sender
   }
 };
-// Function to create a user data
-export const createUser = async (chat_id) => {
+
+// Start command
+export const startCommand = async (chat_id) => {
   try {
-    const existingUser = await User.findOne({ chat_id });
-    if (existingUser) {
-      // If the user exists, you can send a message or handle it accordingly
+    const user = await createUser(chat_id);
+    if (user) {
+      const welcomeMessage = user.name
+        ? `Welcome back, ${user.name}! 😊`
+        : `Hello, it's great to meet you! 😊 You can personalize your experience by setting your name. Just type "/set_name your_name", and I'll remember it for future chats!`;
+
+      return sendMessage(chat_id, welcomeMessage);
+    }
+    return sendMessage(chat_id, errorMessages[101]);
+  } catch (error) {
+    console.error("Error in startCommand:", error.message);
+    return sendMessage(chat_id, errorMessages[101]);
+  }
+};
+
+// Set name command
+export const setNameCommand = async (chat_id, newName) => {
+  try {
+    // Validate if name is provided
+    if (!newName || newName.trim() === "") {
       return sendMessage(
         chat_id,
-        `Welcome back! 😊 You can update your name by using "/set_name your_name" if you'd like to make any changes.`
+        `Please provide a valid name. Usage: "/set_name your_name"`
       );
     }
 
-    const newUser = new User({ chat_id });
-    await newUser.save();
-    sendMessage(
-      chat_id,
-      `Hello, it's great to meet you! 😊 You can personalize your experience by setting your name. Just type "/set_name your_name", and I'll remember it for future chats!`
-    );
-  } catch (error) {
-    console.error("Error creating user:", error.message);
-    sendMessage(chat_id, errorMessages[101]);
-  }
-};
-// Function to set name
-export const setName = async (chat_id, newName) => {
-  try {
-    const result = await User.findOneAndUpdate(
-      { chat_id },
-      { name: newName },
-      { new: true }
-    );
-    if (!result) {
-      sendMessage(chat_id, errorMessages[101]);
-    } else {
-      sendMessage(
+    const updatedUser = await setName(chat_id, newName.trim());
+    if (updatedUser) {
+      return sendMessage(
         chat_id,
-        `Thank you! Your name has been set successfully. 😊 If you'd like to update it again, feel free to use the "/set_name your_name" command anytime!`
+        `Thank you! Your name has been set to ${newName}. 😊 If you'd like to update it again, feel free to use the "/set_name your_name" command anytime!`
       );
+    } else {
+      return sendMessage(chat_id, errorMessages[101]);
     }
   } catch (error) {
-    console.error("Error updating user name:", error.message);
-    sendMessage(chat_id, errorMessages[101]);
+    console.error("Error in setNameCommand:", error.message);
+    return sendMessage(chat_id, errorMessages[101]);
   }
 };
 
-// Function to set gender
-export const setGender = async (chat_id, newGender) => {
+// Set gender command
+export const setGenderCommand = async (chat_id, newGender) => {
   try {
-    const result = await User.findOneAndUpdate(
-      { chat_id },
-      { gender: newGender },
-      { new: true }
-    );
-    if (!result) {
-      sendMessage(chat_id, errorMessages[101]);
-    } else {
-      sendMessage(
+    // Validate gender input
+    const validGenders = ["male", "female", "other"];
+    if (!newGender || !validGenders.includes(newGender.toLowerCase())) {
+      return sendMessage(
         chat_id,
-        `Thank you! Your gender has been set successfully. 🌟 If you ever want to change it, just use the "/set_gender your_gender" command anytime!`
+        `Please provide a valid gender ("male", "female", or "other"). Usage: "/set_gender your_gender"`
       );
     }
+
+    const updatedUser = await setGender(chat_id, newGender.toLowerCase());
+    if (updatedUser) {
+      return sendMessage(
+        chat_id,
+        `Thank you! Your gender has been set to ${newGender}. 🌟 If you'd like to update it, just use the "/set_gender your_gender" command anytime!`
+      );
+    } else {
+      return sendMessage(chat_id, errorMessages[101]);
+    }
   } catch (error) {
-    console.error("Error updating user gender:", error.message);
-    sendMessage(chat_id, errorMessages[101]);
+    console.error("Error in setGenderCommand:", error.message);
+    return sendMessage(chat_id, errorMessages[101]);
   }
 };
