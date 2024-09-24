@@ -8,10 +8,10 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 // Function to send a letter to other user
-export const AI_SendToCommand = async (chat_id, receiverId, message) => {
+export const AI_SendToCommand = async (chat_id, receiver_id, message) => {
   try {
-    const sender = getUser(chat_id);
-    const receiver = getUser(receiverId);
+    const sender = await getUser(chat_id);
+    const receiver = await getUser(receiver_id);
     if (sender && receiver) {
       const prompt = `Imagine yourself as a warm-hearted, friendly ${
         sender.gender ? sender.gender : "messenger"
