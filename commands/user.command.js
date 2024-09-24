@@ -75,10 +75,7 @@ export const getMeCommand = async (chat_id) => {
     if (user) {
       return sendMessage(
         chat_id,
-        `
-        Name: ${user.name || "Not set"}\n
-        Gender: ${user.gender || "Not set"}\n
-        `
+        `Name: ${user.name || "Not set"}\nGender: ${user.gender || "Not set"}\n`
       );
     }
     return sendMessage(
