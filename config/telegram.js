@@ -27,31 +27,35 @@ export const handleMessage = async (req) => {
 
   // Check if the message is a command (starts with "/")
   if (messageText.startsWith("/")) {
-    const [commandParts, senderName, ...messageParts] = messageText.split(" ");
+    const [commandParts, secondPart, ...messageParts] = messageText.split(" ");
     const command = commandParts.slice(1).toLowerCase(); // Get the command without "/"
     const message = messageParts.join(" "); // Combine the remaining words
 
     switch (command) {
       case "start":
         return createUser(messageObj.chat.id);
-      case "to_chie":
-        return writeLetter(
-          "female",
-          messageObj.chat.id,
-          senderName,
-          process.env.CHIE,
-          "Chie",
-          message
-        );
-      case "to_niks":
-        return writeLetter(
-          "male",
-          messageObj.chat.id,
-          senderName,
-          process.env.NIKS,
-          "Niks",
-          message
-        );
+      case "set_name":
+        return createUser(messageObj.chat.id, secondPart);
+      case "set_gender":
+        return createUser(messageObj.chat.id, secondPart);
+      // case "to_chie":
+      //   return writeLetter(
+      //     "female",
+      //     messageObj.chat.id,
+      //     senderName,
+      //     process.env.CHIE,
+      //     "Chie",
+      //     message
+      //   );
+      // case "to_niks":
+      //   return writeLetter(
+      //     "male",
+      //     messageObj.chat.id,
+      //     senderName,
+      //     process.env.NIKS,
+      //     "Niks",
+      //     message
+      //   );
 
       default:
         return sendMessage(messageObj, "Hey hi, I don't know that command");
