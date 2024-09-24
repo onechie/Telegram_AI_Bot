@@ -1,12 +1,13 @@
 import {
   createUser,
+  getUser,
   updateName,
   updateGender,
 } from "../controllers/user.controller.js";
 import { sendRequest } from "../config/axios.js"; // Import the request function
 
 const errorMessages = {
-  101: `Oops! 😔 Something went wrong. Please try again or check your input and give it another shot. If the issue persists, feel free to reach out for help!`,
+  101: `Oops! 😔 Something went wrong.\nPlease try again or check your input and give it another shot.\nIf the issue persists, feel free to reach out for help!`,
 };
 
 // Function to send a message back to the user
@@ -55,14 +56,37 @@ export const startCommand = async (chat_id) => {
     const user = await createUser(chat_id);
     if (user) {
       const welcomeMessage = user.name
-        ? `Welcome back, ${user.name}! 😊`
-        : `Hello, it's great to meet you! 😊 You can personalize your experience by setting your name. Just type "/set_name your_name", and I'll remember it for future chats!`;
+        ? `Welcome back, ${user.name}! 😊\nYou can check your info using "/get_me" command`
+        : `Hello, it's great to meet you! 😊\nYou can personalize your experience by setting your name.\nJust type "/set_name your_name", and I'll remember it for future chats!`;
 
       return sendMessage(chat_id, welcomeMessage);
     }
     return sendMessage(chat_id, errorMessages[101]);
   } catch (error) {
     console.error("Error in startCommand:", error.message);
+    return sendMessage(chat_id, errorMessages[101]);
+  }
+};
+
+// Get info command
+export const getMeCommand = async (chat_id) => {
+  try {
+    const user = getUser(chat_id);
+    if (user) {
+      return sendMessage(
+        chat_id,
+        `
+        Name: ${user.name || "Not set"}\n
+        Gender: ${user.gender || "Not set"}\n
+        `
+      );
+    }
+    return sendMessage(
+      chat_id,
+      `It looks like you're not registered yet. Please use the "/start" command to register and get started!`
+    );
+  } catch (error) {
+    console.error("Error in getMeCommand:", error.message);
     return sendMessage(chat_id, errorMessages[101]);
   }
 };
@@ -74,7 +98,7 @@ export const setNameCommand = async (chat_id, newName) => {
     if (!newName || newName.trim() === "") {
       return sendMessage(
         chat_id,
-        `Please provide a valid name. Usage: "/set_name your_name"`
+        `Please provide a valid name.\nUsage: "/set_name your_name"`
       );
     }
 
@@ -82,7 +106,7 @@ export const setNameCommand = async (chat_id, newName) => {
     if (updatedUser) {
       return sendMessage(
         chat_id,
-        `Thank you! Your name has been set to ${newName}. 😊 If you'd like to update it again, feel free to use the "/set_name your_name" command anytime!`
+        `Thank you! Your name has been set to ${newName}. 😊\nIf you'd like to update it again, feel free to use the "/set_name your_name" command anytime!`
       );
     } else {
       return sendMessage(chat_id, errorMessages[101]);
@@ -101,7 +125,7 @@ export const setGenderCommand = async (chat_id, newGender) => {
     if (!newGender || !validGenders.includes(newGender.toLowerCase())) {
       return sendMessage(
         chat_id,
-        `Please provide a valid gender:\n ("male", "female", or "other"). \nUsage: "/set_gender your_gender"`
+        `Please provide a valid gender:\n("male", "female", or "other").\nUsage: "/set_gender your_gender"`
       );
     }
 

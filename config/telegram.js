@@ -6,6 +6,7 @@ import {
   startCommand,
   setNameCommand,
   setGenderCommand,
+  getMeCommand,
 } from "../commands/user.command.js";
 // Load environment variables
 dotenv.config();
@@ -61,6 +62,9 @@ export const handleMessage = async (req) => {
         case "start":
           return await startCommand(chatId);
 
+        case "get_me":
+          return await getMeCommand(chatId);
+
         case "set_name":
           return await setNameCommand(chatId, args.join(" ")); // Allow multi-word names
 
@@ -76,7 +80,7 @@ export const handleMessage = async (req) => {
         default:
           return sendMessage(
             chatId,
-            `Unknown command "${command}". Try using /start, /set_name, or /set_gender.`
+            `Unknown command "${command}". \nTry using /start, /get_me /set_name, or /set_gender.`
           );
       }
     } else {

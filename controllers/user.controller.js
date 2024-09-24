@@ -16,6 +16,20 @@ export const createUser = async (chat_id) => {
   }
 };
 
+// Function to get a user with chat_id
+export const getUser = async (chat_id) => {
+  try {
+    const user = await User.findOne({ chat_id });
+    if (user) {
+      return user;
+    }
+    return false;
+  } catch (error) {
+    console.error("Error getting user:", error.message);
+    throw new Error("User fetching failed");
+  }
+};
+
 // Function to update name
 export const updateName = async (chat_id, newName) => {
   try {
