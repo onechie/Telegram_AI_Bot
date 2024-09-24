@@ -65,7 +65,7 @@ export const handleMessage = async (req) => {
           return await setNameCommand(chatId, args.join(" ")); // Allow multi-word names
 
         case "set_gender":
-          return await setGenderCommand(chatId, args[0].toLowerCase()); // Gender likely to be a single word
+          return await setGenderCommand(chatId, args[0]?.toLowerCase() || ""); // Gender likely to be a single word
 
         // Add additional custom commands here
         // case "to_chie":
