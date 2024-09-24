@@ -64,10 +64,20 @@ export const handleMessage = async (req) => {
           return await setGenderCommand(chatId, args[0]?.toLowerCase() || ""); // Gender likely to be a single word
 
         case "to_chie":
-          return await AI_SendToCommand(chatId, process.env.CHIE, args.join(" "));
+          return await AI_SendToCommand(
+            chatId,
+            process.env.CHIE,
+            args.join(" ")
+          );
 
         case "to_niks":
-          return await AI_SendToCommand(chatId, process.env.NIKS, args.join(" "));
+          return await AI_SendToCommand(
+            chatId,
+            process.env.NIKS,
+            args.join(" ")
+          );
+        case "chavacano":
+          return await AI_ChavacanoCommand(chatId, args.join(" ") || "");
 
         default:
           return sendMessage(

@@ -52,8 +52,26 @@ export const AI_TalkCommand = async (chat_id, prompt) => {
     const sender = await getUser(chat_id);
     // Handle regular messages by generating a response using the Google AI model
     const result = await model.generateContent(
-      `${sender.name ? `Hello, I am ${sender.name}, ` : ""}${prompt}`
+      `${sender.name ? `Hello, I'm ${sender.name}, ` : "Hello, "}${prompt}`
     );
+    const responseText = result?.response?.text();
+    return sendMessage(chat_id, responseText);
+  } catch (error) {
+    console.error("Error in AI_TalkCommand:", error.message);
+    return sendMessage(chat_id, errorMessages[101]);
+  }
+};
+
+export const AI_ChavacanoCommand = async (chat_id, prompt) => {
+  try {
+    const sender = await getUser(chat_id);
+    // Handle regular messages by generating a response using the Google AI model
+    const result = await model.generateContent(
+      `${
+        sender.name ? `Hello, I'm ${sender.name}. ` : "Hello! "
+      }Could you please translate this Chavacano message: "${prompt}" into English or Tagalog?`
+    );
+
     const responseText = result?.response?.text();
     return sendMessage(chat_id, responseText);
   } catch (error) {
