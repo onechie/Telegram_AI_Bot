@@ -46,8 +46,17 @@ export const writeLetter = async (
 };
 // Function to create a user data
 export const createUser = async (chat_id) => {
-  const newUser = new User({ chat_id });
   try {
+    const existingUser = await User.findOne({ chat_id });
+    if (existingUser) {
+      // If the user exists, you can send a message or handle it accordingly
+      return sendMessage(
+        chat_id,
+        `Welcome back! 😊 You can update your name by using "/set_name your_name" if you'd like to make any changes.`
+      );
+    }
+
+    const newUser = new User({ chat_id });
     await newUser.save();
     sendMessage(
       chat_id,
