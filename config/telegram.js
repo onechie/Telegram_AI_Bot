@@ -6,6 +6,9 @@ import {
   createUser,
   setName,
   setGender,
+  startCommand,
+  setNameCommand,
+  setGenderCommand,
 } from "../commands/user.command.js";
 import { updateName } from "../controller/user.controller.js";
 // Load environment variables
@@ -60,13 +63,13 @@ export const handleMessage = async (req) => {
 
       switch (command) {
         case "start":
-          return await createUser(chatId);
+          return await startCommand(chatId);
 
         case "set_name":
-          return await updateName(chatId, args.join(" ")); // Allow multi-word names
+          return await setNameCommand(chatId, args.join(" ")); // Allow multi-word names
 
         case "set_gender":
-          return await setGender(chatId, args[0].toLowerCase()); // Gender likely to be a single word
+          return await setGenderCommand(chatId, args[0].toLowerCase()); // Gender likely to be a single word
 
         // Add additional custom commands here
         // case "to_chie":
