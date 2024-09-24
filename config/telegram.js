@@ -1,20 +1,12 @@
-import { GoogleGenerativeAI } from "@google/generative-ai"; // Import Google AI library
-import dotenv from "dotenv";
 import {
-  sendMessage,
-  writeLetter,
   startCommand,
   setNameCommand,
   setGenderCommand,
   getMeCommand,
 } from "../commands/user.command.js";
-// Load environment variables
-dotenv.config();
-
-// Initialize Google AI client with the API key
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-// Specify the model to use for generating content
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+import { AI_TalkCommand, AI_SendToCommand } from "../commands/ai.command.js";
+import { sendMessage } from "../commands/general.command.js";
+import { errorMessages } from "../utils/error_messages.js";
 
 // Function to handle incoming messages
 export const handleMessage = async (req) => {
@@ -71,11 +63,11 @@ export const handleMessage = async (req) => {
         case "set_gender":
           return await setGenderCommand(chatId, args[0]?.toLowerCase() || ""); // Gender likely to be a single word
 
-        // Add additional custom commands here
-        // case "to_chie":
-        //   return await writeLetter("female", chatId, senderName, process.env.CHIE, "Chie", args.join(" "));
-        // case "to_niks":
-        //   return await writeLetter("male", chatId, senderName, process.env.NIKS, "Niks", args.join(" "));
+        case "to_chie":
+          return await AI_SendToCommand(chatId, process.env.CHIE, args.join(" "));
+
+        case "to_niks":
+          return await AI_SendToCommand(chatId, process.env.NIKS, args.join(" "));
 
         default:
           return sendMessage(
@@ -84,17 +76,10 @@ export const handleMessage = async (req) => {
           );
       }
     } else {
-      // Handle regular messages by generating a response using the Google AI model
-      const result = await model.generateContent(messageText);
-      const responseText =
-        result?.response?.text() || "Sorry, I couldn't understand that!";
-      return sendMessage(chatId, responseText);
+      AI_TalkCommand(chatId, messageText);
     }
   } catch (error) {
     console.error("Error handling message:", error.message);
-    return sendMessage(
-      req.body?.message?.chat?.id,
-      "Oops! Something went wrong. Please try again."
-    );
+    return sendMessage(req.body?.message?.chat?.id, errorMessages[0]);
   }
 };

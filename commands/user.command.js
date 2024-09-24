@@ -4,51 +4,8 @@ import {
   updateName,
   updateGender,
 } from "../controllers/user.controller.js";
-import { sendRequest } from "../config/axios.js"; // Import the request function
-
-const errorMessages = {
-  101: `Oops! 😔 Something went wrong.\nPlease try again or check your input and give it another shot.\nIf the issue persists, feel free to reach out for help!`,
-};
-
-// Function to send a message back to the user
-export const sendMessage = (id, messageText) => {
-  return sendRequest("post", {
-    method: "sendMessage",
-    params: {
-      chat_id: id, // Chat ID of the user
-      text: messageText, // Message text to be sent
-    },
-  });
-};
-// Function to send a letter to other user
-export const writeLetter = async (
-  gender,
-  senderId,
-  senderName,
-  receiverId,
-  receiverName,
-  message
-) => {
-  const prompt = `Imagine yourself as a warm-hearted, friendly messenger of ${gender}. Deliver an uplifting message to ${receiverName} on behalf of ${senderName}. The message to convey is: "${message}". Make sure the tone is bright, positive, and filled with encouragement, leaving the recipient feeling joyful and appreciated. with no signature part.`;
-
-  try {
-    // Generate a response using the Google AI model
-    const result = await model.generateContent(prompt);
-    const text = result?.response?.text();
-    sendMessage(senderId, `${text} : [sent to ${receiverName}]`); // send to sender
-    return sendMessage(receiverId, text); // send to receiver
-  } catch (error) {
-    // Fallback message in case of API error or safety block
-    let fallbackMessage = `Sorry, ${senderName}, it seems I cannot process that message right now. Please try again later!`;
-
-    if (error?.response?.candidates?.[0]?.safetyRatings) {
-      // Check if the error is related to safety concerns and adjust the message
-      fallbackMessage = `Hey ${senderName}, your message seems a bit sensitive. Let's try saying it differently!`;
-    }
-
-    return sendMessage(senderId, fallbackMessage); // send to sender
-  }
-};
+import { sendMessage } from "./general.command.js";
+import { errorMessages } from "../utils/error_messages.js";
 
 // Start command
 export const startCommand = async (chat_id) => {
