@@ -101,7 +101,7 @@ export const setGenderCommand = async (chat_id, newGender) => {
     if (!newGender || !validGenders.includes(newGender.toLowerCase())) {
       return sendMessage(
         chat_id,
-        `Please provide a valid gender ("male", "female", or "other"). Usage: "/set_gender your_gender"`
+        `Please provide a valid gender:\n ("male", "female", or "other"). \nUsage: "/set_gender your_gender"`
       );
     }
 
@@ -109,7 +109,7 @@ export const setGenderCommand = async (chat_id, newGender) => {
     if (updatedUser) {
       return sendMessage(
         chat_id,
-        `Thank you! Your gender has been set to ${newGender}. 🌟 If you'd like to update it, just use the "/set_gender your_gender" command anytime!`
+        `Thank you! Your gender has been set to ${newGender}. 🌟 \nIf you'd like to update it, just use the "/set_gender your_gender" command anytime!`
       );
     } else {
       return sendMessage(chat_id, errorMessages[101]);
