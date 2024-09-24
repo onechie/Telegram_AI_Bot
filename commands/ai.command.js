@@ -43,7 +43,7 @@ export const AI_SendToCommand = async (chat_id, receiver_id, message) => {
       fallbackMessage = `Hey, your message seems a bit sensitive. Let's try saying it differently!`;
     }
     console.error("Error in AI_SendToCommand:", error.message);
-    return sendMessage(senderId, fallbackMessage); // send to sender
+    return sendMessage(chat_id, fallbackMessage); // send to sender
   }
 };
 
