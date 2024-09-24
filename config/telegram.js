@@ -3,14 +3,10 @@ import dotenv from "dotenv";
 import {
   sendMessage,
   writeLetter,
-  createUser,
-  setName,
-  setGender,
   startCommand,
   setNameCommand,
   setGenderCommand,
 } from "../commands/user.command.js";
-import { updateName } from "../controller/user.controller.js";
 // Load environment variables
 dotenv.config();
 

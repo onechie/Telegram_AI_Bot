@@ -2,9 +2,8 @@ import {
   createUser,
   updateName,
   updateGender,
-} from "../controllers/userController.js";
+} from "../controllers/user.controller.js";
 import { sendRequest } from "../config/axios.js"; // Import the request function
-import { updateGender, updateName } from "../controller/user.controller.js";
 
 const errorMessages = {
   101: `Oops! 😔 Something went wrong. Please try again or check your input and give it another shot. If the issue persists, feel free to reach out for help!`,
