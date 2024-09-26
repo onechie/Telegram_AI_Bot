@@ -8,9 +8,9 @@ import { sendMessage } from "./general.command.js";
 import { errorMessages } from "../utils/error_messages.js";
 
 // Start command
-export const startCommand = async (chat_id) => {
+export const startCommand = async (chat_id, username) => {
   try {
-    const user = await createUser(chat_id);
+    const user = await createUser(chat_id, username);
     if (user) {
       const welcomeMessage = user.name
         ? `Welcome back, ${user.name}! 😊\nYou can check your info using "/get_me" command`

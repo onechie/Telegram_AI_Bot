@@ -1,13 +1,13 @@
 import User from "../models/user.model.js";
 
 // Function to create a user data
-export const createUser = async (chat_id) => {
+export const createUser = async (chat_id, username) => {
   try {
     const existingUser = await User.findOne({ chat_id });
     if (existingUser) {
       return existingUser; // Return existing user if found
     }
-    const newUser = new User({ chat_id });
+    const newUser = new User({ chat_id, username });
     await newUser.save();
     return newUser; // Return the newly created user
   } catch (error) {

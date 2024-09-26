@@ -4,7 +4,11 @@ import {
   setGenderCommand,
   getMeCommand,
 } from "../commands/user.command.js";
-import { AI_TalkCommand, AI_SendToCommand, AI_ChavacanoCommand } from "../commands/ai.command.js";
+import {
+  AI_TalkCommand,
+  AI_SendToCommand,
+  AI_ChavacanoCommand,
+} from "../commands/ai.command.js";
 import { sendMessage } from "../commands/general.command.js";
 import { errorMessages } from "../utils/error_messages.js";
 
@@ -20,6 +24,7 @@ export const handleMessage = async (req) => {
     }
 
     const chatId = messageObj.chat.id;
+    const username = messageObj.chat.username || "";
     const messageText =
       messageObj.text?.trim() || messageObj.edited_message?.text?.trim() || "";
 
@@ -52,7 +57,7 @@ export const handleMessage = async (req) => {
 
       switch (command) {
         case "start":
-          return await startCommand(chatId);
+          return await startCommand(chatId, username);
 
         case "get_me":
           return await getMeCommand(chatId);
