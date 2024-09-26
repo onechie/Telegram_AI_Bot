@@ -3,6 +3,7 @@ import {
   setNameCommand,
   setGenderCommand,
   getMeCommand,
+  setUsernameCommand,
 } from "../commands/user.command.js";
 import {
   AI_TalkCommand,
@@ -67,19 +68,14 @@ export const handleMessage = async (req) => {
 
         case "set_gender":
           return await setGenderCommand(chatId, args[0]?.toLowerCase() || ""); // Gender likely to be a single word
+        case "set_username":
+          return await setUsernameCommand(chatId, args[0]?.toLowerCase() || "");
 
-        case "to_chie":
+        case "send_to":
           return await AI_SendToCommand(
             chatId,
-            process.env.CHIE,
-            args.join(" ")
-          );
-
-        case "to_niks":
-          return await AI_SendToCommand(
-            chatId,
-            process.env.NIKS,
-            args.join(" ")
+            args[0] || "",
+            args.slice(1).join(" ") || ""
           );
         case "chavacano":
           return await AI_ChavacanoCommand(chatId, args.join(" ") || "");

@@ -17,9 +17,9 @@ export const createUser = async (chat_id, username) => {
 };
 
 // Function to get a user with chat_id
-export const getUser = async (chat_id) => {
+export const getUser = async (userData) => {
   try {
-    const user = await User.findOne({ chat_id });
+    const user = await User.findOne(userData);
     if (user) {
       return user;
     }
@@ -57,5 +57,24 @@ export const updateGender = async (chat_id, newGender) => {
   } catch (error) {
     console.error("Error updating user gender:", error.message);
     throw new Error("Gender update failed");
+  }
+};
+
+// Function to update name
+export const updateUsername = async (chat_id, username) => {
+  try {
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      return false; // Return false if username exist
+    }
+    const result = await User.findOneAndUpdate(
+      { chat_id },
+      { username },
+      { new: true }
+    );
+    return result;
+  } catch (error) {
+    console.error("Error updating user name:", error.message);
+    throw new Error("Name update failed");
   }
 };

@@ -3,6 +3,7 @@ import {
   getUser,
   updateName,
   updateGender,
+  updateUsername,
 } from "../controllers/user.controller.js";
 import { sendMessage } from "./general.command.js";
 import { errorMessages } from "../utils/error_messages.js";
@@ -28,7 +29,7 @@ export const startCommand = async (chat_id, username) => {
 // Get info command
 export const getMeCommand = async (chat_id) => {
   try {
-    const user = await getUser(chat_id);
+    const user = await getUser({ chat_id });
     if (user) {
       return sendMessage(
         chat_id,
@@ -91,6 +92,27 @@ export const setGenderCommand = async (chat_id, newGender) => {
       );
     } else {
       return sendMessage(chat_id, errorMessages[101]);
+    }
+  } catch (error) {
+    console.error("Error in setGenderCommand:", error.message);
+    return sendMessage(chat_id, errorMessages[101]);
+  }
+};
+
+// Set username command
+export const setUsernameCommand = async (chat_id, username) => {
+  try {
+    const updatedUser = await updateUsername(chat_id, username);
+    if (updatedUser.chat_id) {
+      return sendMessage(
+        chat_id,
+        `Thank you! Your username has been set to ${username}. 🌟 \nIf you'd like to update it, just use the "/set_username your_username" command anytime!`
+      );
+    } else {
+      return sendMessage(
+        chat_id,
+        `Sorry, the username "${username}" is already in use. Please try a different one! ❗`
+      );
     }
   } catch (error) {
     console.error("Error in setGenderCommand:", error.message);

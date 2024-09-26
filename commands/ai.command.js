@@ -8,10 +8,10 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 // Function to send a letter to other user
-export const AI_SendToCommand = async (chat_id, receiver_id, message) => {
+export const AI_SendToCommand = async (chat_id, username, message) => {
   try {
-    const sender = await getUser(chat_id);
-    const receiver = await getUser(receiver_id);
+    const sender = await getUser({ chat_id });
+    const receiver = await getUser({ username });
     if (sender && receiver) {
       const prompt = `Imagine yourself as a warm-hearted, friendly messenger. Deliver an uplifting message 
       ${receiver.name ? `to ${receiver.name}` : ""} on behalf of ${
@@ -49,7 +49,7 @@ export const AI_SendToCommand = async (chat_id, receiver_id, message) => {
 
 export const AI_TalkCommand = async (chat_id, prompt) => {
   try {
-    const sender = await getUser(chat_id);
+    const sender = await getUser({ chat_id });
     // Handle regular messages by generating a response using the Google AI model
     const result = await model.generateContent(
       `${sender.name ? `Hello, I'm ${sender.name}, ` : "Hello, "}${prompt}`
@@ -64,7 +64,7 @@ export const AI_TalkCommand = async (chat_id, prompt) => {
 
 export const AI_ChavacanoCommand = async (chat_id, prompt) => {
   try {
-    const sender = await getUser(chat_id);
+    const sender = await getUser({ chat_id });
     // Handle regular messages by generating a response using the Google AI model
     const result = await model.generateContent(
       `${
