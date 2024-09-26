@@ -64,7 +64,7 @@ export const updateGender = async (chat_id, newGender) => {
 export const updateUsername = async (chat_id, username) => {
   try {
     const existingUsername = await User.findOne({ username });
-    if (existingUsername) {
+    if (existingUsername && username) {
       return false; // Return false if username exist
     }
     const result = await User.findOneAndUpdate(
