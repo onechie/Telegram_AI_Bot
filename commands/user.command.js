@@ -33,7 +33,9 @@ export const getMeCommand = async (chat_id) => {
     if (user) {
       return sendMessage(
         chat_id,
-        `Username: ${user.username || "Not set"}\nName: ${user.name || "Not set"}\nGender: ${user.gender || "Not set"}\n`
+        `Username: ${user.username || "Not set"}\nName: ${
+          user.name || "Not set"
+        }\nGender: ${user.gender || "Not set"}\n`
       );
     }
     return sendMessage(
@@ -53,7 +55,13 @@ export const setNameCommand = async (chat_id, newName) => {
     if (!newName || newName.trim() === "") {
       return sendMessage(
         chat_id,
-        `Please provide a valid name.\nUsage: "/set_name your_name"`
+        `Please provide a valid name.\nUsage: "/set_name your_name"\nTo remove just use "/set_name none"`
+      );
+    } else if (newName === "none") {
+      await updateName(chat_id, "");
+      return sendMessage(
+        chat_id,
+        `Your name has been cleared successfully. 🌟 \nIf you'd like to update it, just use the "/set_name your_name" command anytime!`
       );
     }
 
@@ -77,10 +85,16 @@ export const setGenderCommand = async (chat_id, newGender) => {
   try {
     // Validate gender input
     const validGenders = ["male", "female", "other"];
-    if (!newGender || !validGenders.includes(newGender.toLowerCase())) {
+    if (newGender === "none") {
+      await updateGender(chat_id, "");
       return sendMessage(
         chat_id,
-        `Please provide a valid gender:\n("male", "female", or "other").\nUsage: "/set_gender your_gender"`
+        `Your gender has been cleared successfully. 🌟 \nIf you'd like to update it, just use the "/set_gender your_gender" command anytime!`
+      );
+    } else if (!newGender || !validGenders.includes(newGender.toLowerCase())) {
+      return sendMessage(
+        chat_id,
+        `Please provide a valid gender:\n("male", "female", or "other").\nUsage: "/set_gender your_gender"\nTo remove just use "/set_gender none"`
       );
     }
 
@@ -102,6 +116,19 @@ export const setGenderCommand = async (chat_id, newGender) => {
 // Set username command
 export const setUsernameCommand = async (chat_id, username) => {
   try {
+    // Validate if name is provided
+    if (!username || username.trim() === "") {
+      return sendMessage(
+        chat_id,
+        `Please provide a valid username.\nUsage: "/set_username your_username"\nTo remove just use "/set_username none"`
+      );
+    } else if (username === "none") {
+      await updateUsername(chat_id, "");
+      return sendMessage(
+        chat_id,
+        `Your username has been cleared successfully. 🌟 \nIf you'd like to update it, just use the "/set_username your_username" command anytime!`
+      );
+    }
     const updatedUser = await updateUsername(chat_id, username);
     if (updatedUser.chat_id) {
       return sendMessage(
