@@ -21,7 +21,7 @@ export const helpCommand = (chat_id) => {
       "\n/set_gender <gender> - Set your gender (male, female, other)." +
       "\n/set_username <username> - Set your username." +
       '\n/send_to <recipient username> <message idea> - Construct a letter to a user with the help of AI. Just give an idea like "Good morning, how are you?" and the AI will generate a personalized letter.' +
-      "\n/chavacano <text> - Translate the Chavacano text into Tagalog or English with the help of AI." +
       "\n/help - Show this help message."
   );
+  //"\n/chavacano <text> - Translate the Chavacano text into Tagalog or English with the help of AI." +
 };

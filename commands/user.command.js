@@ -116,7 +116,7 @@ export const setGenderCommand = async (chat_id, newGender) => {
 // Set username command
 export const setUsernameCommand = async (chat_id, username) => {
   try {
-    // Validate if name is provided
+    // Validate if username is provided
     if (!username || username.trim() === "") {
       return sendMessage(
         chat_id,
