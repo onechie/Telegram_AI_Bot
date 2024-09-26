@@ -22,5 +22,5 @@ app.get("*", (req, res) => {
 // Start the server and listen on the specified port
 app.listen(PORT, () => {
   connectDB();
-  console.log("Server is running on PORT:", PORT); // Log the server status
+  //console.log("Server is running on PORT:", PORT); // Log the server status
 });
