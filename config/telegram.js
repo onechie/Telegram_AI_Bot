@@ -83,7 +83,7 @@ export const handleMessage = async (req) => {
         default:
           return sendMessage(
             chatId,
-            `Unknown command "${command}". \nTry using /start, /get_me /set_name, or /set_gender.`
+            `Unknown command "${command}". \nTry using /start, /get_me, /set_username, /set_name, or /set_gender.`
           );
       }
     } else {
