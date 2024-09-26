@@ -10,7 +10,7 @@ import {
   AI_SendToCommand,
   AI_ChavacanoCommand,
 } from "../commands/ai.command.js";
-import { sendMessage } from "../commands/general.command.js";
+import { helpCommand, sendMessage } from "../commands/general.command.js";
 import { errorMessages } from "../utils/error_messages.js";
 
 // Function to handle incoming messages
@@ -67,7 +67,7 @@ export const handleMessage = async (req) => {
           return await setNameCommand(chatId, args.join(" ")); // Allow multi-word names
 
         case "set_gender":
-          return await setGenderCommand(chatId, args[0]?.toLowerCase() || ""); // Gender likely to be a single word
+          return await setGenderCommand(chatId, args[0]?.toLowerCase() || "");
         case "set_username":
           return await setUsernameCommand(chatId, args[0]?.toLowerCase() || "");
 
@@ -80,10 +80,13 @@ export const handleMessage = async (req) => {
         case "chavacano":
           return await AI_ChavacanoCommand(chatId, args.join(" ") || "");
 
+        case "help":
+          return helpCommand(chatId);
+
         default:
-          return sendMessage(
+          sendMessage(
             chatId,
-            `Unknown command "${command}". \nTry using /start, /get_me, /set_username, /set_name, or /set_gender.`
+            `Unknown command "${command}". \nUse the /help command to see the list of available commands.`
           );
       }
     } else {
