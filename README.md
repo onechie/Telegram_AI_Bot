@@ -1,4 +1,4 @@
-# Chie's Telegram AI Bot
+# Telegram AI Bot
 
 This AI-powered Telegram bot, built with **Node.js**, **Express**, and **MongoDB**, is designed to interact with users and handle a variety of commands. It also serves as a question buddy, allowing users to ask various questions and receive intelligent responses. Powered by the Google AI Gemini API, the bot provides a flexible chatbot experience with a simple command-based interface.
 
