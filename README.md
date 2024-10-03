@@ -2,6 +2,13 @@
 
 This AI-powered Telegram bot, built with **Node.js**, **Express**, and **MongoDB**, is designed to interact with users and handle a variety of commands. It also serves as a question buddy, allowing users to ask various questions and receive intelligent responses. Powered by the Google AI Gemini API, the bot provides a flexible chatbot experience with a simple command-based interface.
 
+## Technologies Used
+
+- **Node.js**
+- **Express**
+- **MongoDB**
+- **Google AI Gemini API**
+
 ## Quick Guide to Commands
 
 ### Available Commands
@@ -34,10 +41,3 @@ This AI-powered Telegram bot, built with **Node.js**, **Express**, and **MongoDB
 ### Default Behavior
 
 If no command is detected (message does not start with `/`), the bot acts as a question buddy. You can ask it various questions, and it will respond intelligently.
-
-## Technologies Used
-
-- **Node.js**
-- **Express**
-- **MongoDB**
-- **Google AI Gemini API**
