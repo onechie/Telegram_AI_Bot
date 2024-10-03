@@ -21,7 +21,7 @@ This AI-powered Telegram bot, built with **Node.js**, **Express**, and **MongoDB
 
 - **`/set_name [name]`**  
   Sets the user's display name. Allows multi-word names.  
-  Example: `/set_name Angelo Cruz`
+  Example: `/set_name John Doe`
   
 - **`/set_gender [gender]`**  
   Sets the user's gender.  
@@ -29,7 +29,7 @@ This AI-powered Telegram bot, built with **Node.js**, **Express**, and **MongoDB
   
 - **`/set_username [username]`**  
   Sets the user's preferred username.  
-  Example: `/set_username angelo123`
+  Example: `/set_username john000`
   
 - **`/send_to [user] [message]`**  
   Sends a message to another user.  
